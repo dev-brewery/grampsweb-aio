@@ -1,0 +1,19 @@
+# Runtime appdata / bind-mount dirs (created by docker compose for local testing)
+users/
+grampsdb/
+media/
+indexdir/
+thumbnail_cache/
+cache/
+persist/
+secret/
+tmp/
+
+.env
+.env.*
+*.log
+.DS_Store
+
+# Internal development notes — kept local, not published to the public repo
+CODE_REVIEW.md
+issues/

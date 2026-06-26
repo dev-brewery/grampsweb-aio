@@ -1,0 +1,30 @@
+# Gramps Web All-in-One — single-container local test/deploy.
+# (For the classic 3-container split, see examples/grampsweb-3container-compose.yml)
+#
+#   docker compose up -d --build
+#   then open http://localhost:5000 to run the setup wizard.
+
+services:
+  grampsweb-aio:
+    build: .
+    image: devbrewery/grampsweb-aio:latest
+    container_name: grampsweb-aio
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      GRAMPSWEB_TREE: "${GRAMPSWEB_TREE:-Gramps Web}"
+      GUNICORN_NUM_WORKERS: "${GUNICORN_NUM_WORKERS:-4}"
+      GUNICORN_TIMEOUT: "${GUNICORN_TIMEOUT:-120}"
+      # Optional: set if behind a reverse proxy, e.g. https://genealogy.example.com
+      # GRAMPSWEB_BASE_URL: ""
+    volumes:
+      - ./users:/app/users
+      - ./grampsdb:/root/.gramps/grampsdb
+      - ./media:/app/media
+      - ./indexdir:/app/indexdir
+      - ./thumbnail_cache:/app/thumbnail_cache
+      - ./cache:/app/cache
+      - ./secret:/app/secret
+      # Redis persistence lives under ./persist/redis (no /tmp host mount)
+      - ./persist:/app/persist

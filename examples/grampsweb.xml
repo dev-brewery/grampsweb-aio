@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>grampsweb</Name>
+  <Repository>ghcr.io/gramps-project/grampsweb:latest</Repository>
+  <Registry>https://github.com/gramps-project/gramps-web/pkgs/container/grampsweb</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://forums.unraid.net/topic/000000-support-grampsweb/</Support>
+  <Project>https://github.com/gramps-project/gramps-web</Project>
+  <Overview>Gramps Web is a modern, feature-packed, free &amp; open source web app for browsing and collaboratively editing genealogical databases. It is the web-based companion to the Gramps desktop application and is fully interoperable with it.[br][br][b]Features:[/b][br]- Interactive family tree charts (ancestor, descendant, fan, hourglass)[br]- Dynamic mapping tools with historical map overlays[br]- Collaborative multi-user editing with role-based access[br]- Advanced privacy controls per person/record[br]- GEDCOM import/export[br]- Media support (photos, documents)[br]- DNA &amp; chromosome tools[br]- AI chat assistant (query your family tree in natural language)[br]- Blog for documenting research stories[br]- 40+ languages[br]- Bi-directional sync with Gramps Desktop[br][br][b]IMPORTANT - Multi-Container Setup:[/b][br]Gramps Web requires Redis (for Celery task queue) and a Celery worker. This template configures the main web application container. You must also deploy the Redis and Celery containers. The easiest way is to use the provided docker-compose.yml via your Unraid terminal or Portainer:[br][br][code]mkdir -p /mnt/user/appdata/grampsweb[br]cd /mnt/user/appdata/grampsweb[br]docker compose up -d[/code][br][br]Or deploy each container individually using this template (see Support thread for step-by-step guide). After the first run, access the setup wizard at the WebUI to create your admin account and import your family tree (.gramps format).</Overview>
+  <Category>Tools: Productivity:</Category>
+  <WebUI>http://[IP]:[PORT:5000]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/unraid-templates/main/grampsweb.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/gramps-project/gramps-web/main/screenshot.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled></DateInstalled>
+  <DonateText>Support the Gramps Project</DonateText>
+  <DonateLink>https://grampsweb.org/contribute/contribute/</DonateLink>
+  <Requires/>
+  <Config Name="Web Port" Target="5000" Default="5000" Mode="tcp" Description="Port for the Gramps Web UI (mapped to container port 5000)" Type="Port" Display="always" Required="true" Mask="false">5000</Config>
+  <Config Name="Tree Name" Target="GRAMPSWEB_TREE" Default="Gramps Web" Mode="" Description="Name of the family tree (created on first run if it doesn't exist)" Type="Variable" Display="always" Required="false" Mask="false">Gramps Web</Config>
+  <Config Name="Redis Broker URL" Target="GRAMPSWEB_CELERY_CONFIG__broker_url" Default="redis://grampsweb_redis:6379/0" Mode="" Description="Celery broker URL. Use 'redis://172.17.0.1:6379/0' if Redis runs on the host network, or set to a custom Redis container name" Type="Variable" Display="advanced" Required="false" Mask="false">redis://grampsweb_redis:6379/0</Config>
+  <Config Name="Redis Result Backend" Target="GRAMPSWEB_CELERY_CONFIG__result_backend" Default="redis://grampsweb_redis:6379/0" Mode="" Description="Celery result backend URL. Should match the broker URL" Type="Variable" Display="advanced" Required="false" Mask="false">redis://grampsweb_redis:6379/0</Config>
+  <Config Name="Rate Limit Storage" Target="GRAMPSWEB_RATELIMIT_STORAGE_URI" Default="redis://grampsweb_redis:6379/1" Mode="" Description="Redis URL for rate limiting storage" Type="Variable" Display="advanced" Required="false" Mask="false">redis://grampsweb_redis:6379/1</Config>
+  <Config Name="Base URL" Target="GRAMPSWEB_BASE_URL" Default="" Mode="" Description="Set if behind a reverse proxy with a custom URL (e.g., https://genealogy.example.com)" Type="Variable" Display="always-hide" Required="false" Mask="false"></Config>
+  <Config Name="CORS Origins" Target="GRAMPSWEB_CORS_ORIGINS" Default="" Mode="" Description="Additional CORS origins if needed (comma separated)" Type="Variable" Display="always-hide" Required="false" Mask="false"></Config>
+  <Config Name="Appdata (Users)" Target="/app/users" Default="/mnt/user/appdata/grampsweb/users" Mode="rw" Description="Persistent user database" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/grampsweb/users</Config>
+  <Config Name="Appdata (Index)" Target="/app/indexdir" Default="/mnt/user/appdata/grampsweb/indexdir" Mode="rw" Description="Search index directory" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/grampsweb/indexdir</Config>
+  <Config Name="Appdata (Thumbnails)" Target="/app/thumbnail_cache" Default="/mnt/user/appdata/grampsweb/thumbnail_cache" Mode="rw" Description="Thumbnail cache" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/grampsweb/thumbnail_cache</Config>
+  <Config Name="Appdata (Cache)" Target="/app/cache" Default="/mnt/user/appdata/grampsweb/cache" Mode="rw" Description="Export and report cache" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/grampsweb/cache</Config>
+  <Config Name="Appdata (Secret)" Target="/app/secret" Default="/mnt/user/appdata/grampsweb/secret" Mode="rw" Description="Flask secret key storage" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/grampsweb/secret</Config>
+  <Config Name="Appdata (Database)" Target="/root/.gramps/grampsdb" Default="/mnt/user/appdata/grampsweb/grampsdb" Mode="rw" Description="Gramps database (your family tree data)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/grampsweb/grampsdb</Config>
+  <Config Name="Appdata (Media)" Target="/app/media" Default="/mnt/user/appdata/grampsweb/media" Mode="rw" Description="Media files (photos, documents, etc.)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/grampsweb/media</Config>
+  <Config Name="Appdata (Tmp)" Target="/tmp" Default="/mnt/user/appdata/grampsweb/tmp" Mode="rw" Description="Temporary files" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/grampsweb/tmp</Config>
+  <TailscaleStateDir/>
+</Container>

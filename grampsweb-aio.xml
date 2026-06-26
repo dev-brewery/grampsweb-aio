@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>grampsweb-aio</Name>
+  <Repository>devbrewery/grampsweb-aio:latest</Repository>
+  <Registry>https://hub.docker.com/r/devbrewery/grampsweb-aio</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/dev-brewery/grampsweb-aio/issues</Support>
+  <Project>https://github.com/dev-brewery/grampsweb-aio</Project>
+  <Overview>Gramps Web is a free &amp; open source genealogy platform for browsing and collaboratively editing family trees. This is an ALL-IN-ONE container that bundles the Gramps Web frontend, backend API, Celery worker, and Redis cache server in a single container - no external dependencies required.[br][br][b]Features:[/b][br]- Interactive family tree charts (ancestor, descendant, fan, hourglass)[br]- Dynamic maps with historical map overlays[br]- Collaborative multi-user editing with role-based access[br]- Privacy controls per person/record[br]- GEDCOM import/export[br]- Media support (photos, documents)[br]- DNA &amp; chromosome tools[br]- AI chat assistant[br]- 40+ languages[br]- Bi-directional sync with Gramps Desktop[br][br][b]First Run:[/b] Navigate to the WebUI to access the setup wizard. Create your admin account and import your family tree (.gramps or GEDCOM format). All three services (web, celery, redis) start automatically via supervisord.</Overview>
+  <Category>Tools: Productivity:</Category>
+  <WebUI>http://[IP]:[PORT:5000]</WebUI>
+  <Icon>https://raw.githubusercontent.com/dev-brewery/grampsweb-aio/main/icon.png</Icon>
+  <TemplateURL>https://raw.githubusercontent.com/dev-brewery/grampsweb-aio/main/grampsweb-aio.xml</TemplateURL>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled></DateInstalled>
+  <DonateText>Support the Gramps Project</DonateText>
+  <DonateLink>https://grampsweb.org/contribute/contribute/</DonateLink>
+  <Requires/>
+  <Config Name="WebUI Port" Target="5000" Default="5050" Mode="tcp" Description="Port for the Gramps Web interface (maps to container port 5000)" Type="Port" Display="always" Required="true" Mask="false">5050</Config>
+  <Config Name="Tree Name" Target="GRAMPSWEB_TREE" Default="Gramps Web" Mode="" Description="Name of the family tree database (created on first run if it doesn't exist)" Type="Variable" Display="always" Required="false" Mask="false">Gramps Web</Config>
+  <Config Name="Gunicorn Workers" Target="GUNICORN_NUM_WORKERS" Default="4" Mode="" Description="Number of Gunicorn worker processes for the web API" Type="Variable" Display="advanced" Required="false" Mask="false">4</Config>
+  <Config Name="Gunicorn Timeout" Target="GUNICORN_TIMEOUT" Default="120" Mode="" Description="Request timeout in seconds for the web API" Type="Variable" Display="advanced" Required="false" Mask="false">120</Config>
+  <Config Name="Secret Key (Optional)" Target="GRAMPSWEB_SECRET_KEY" Default="" Mode="" Description="Flask secret key for session encryption. Leave blank to auto-generate. Changing this will log out all users." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="Base URL" Target="GRAMPSWEB_BASE_URL" Default="" Mode="" Description="Set if behind a reverse proxy (e.g. https://genealogy.yourdomain.com)" Type="Variable" Display="always-hide" Required="false" Mask="false"></Config>
+  <Config Name="Appdata (Users)" Target="/app/users" Default="/mnt/user/appdata/grampsweb-aio/users" Mode="rw" Description="Persistent user database and accounts" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/grampsweb-aio/users</Config>
+  <Config Name="Appdata (Database)" Target="/root/.gramps/grampsdb" Default="/mnt/user/appdata/grampsweb-aio/grampsdb" Mode="rw" Description="Gramps family tree database - THIS IS YOUR DATA" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/grampsweb-aio/grampsdb</Config>
+  <Config Name="Appdata (Media)" Target="/app/media" Default="/mnt/user/appdata/grampsweb-aio/media" Mode="rw" Description="Media files (photos, documents, census records, etc.)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/grampsweb-aio/media</Config>
+  <Config Name="Appdata (Secret)" Target="/app/secret" Default="/mnt/user/appdata/grampsweb-aio/secret" Mode="rw" Description="Flask secret key (session encryption)" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/grampsweb-aio/secret</Config>
+  <Config Name="Appdata (Index)" Target="/app/indexdir" Default="/mnt/user/appdata/grampsweb-aio/indexdir" Mode="rw" Description="Full-text search index" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/grampsweb-aio/indexdir</Config>
+  <Config Name="Appdata (Thumbnails)" Target="/app/thumbnail_cache" Default="/mnt/user/appdata/grampsweb-aio/thumbnail_cache" Mode="rw" Description="Thumbnail cache for media files" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/grampsweb-aio/thumbnail_cache</Config>
+  <Config Name="Appdata (Cache)" Target="/app/cache" Default="/mnt/user/appdata/grampsweb-aio/cache" Mode="rw" Description="Export and report cache" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/grampsweb-aio/cache</Config>
+  <Config Name="Appdata (Persist)" Target="/app/persist" Default="/mnt/user/appdata/grampsweb-aio/persist" Mode="rw" Description="Persistent application state, including the Redis cache database (Redis persists to /app/persist/redis - survives restarts)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/grampsweb-aio/persist</Config>
+  <TailscaleStateDir/>
+</Container>

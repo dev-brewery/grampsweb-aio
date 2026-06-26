@@ -1,0 +1,68 @@
+version: "3.8"
+
+# Gramps Web - Unraid Docker Compose Deployment
+# Copy this file to /mnt/user/appdata/grampsweb/docker-compose.yml
+# Then run: docker compose up -d
+#
+# After first run, access http://<your-unraid-ip>:5000 to complete setup:
+# 1. Create admin account
+# 2. Import family tree (.gramps or GEDCOM format)
+# 3. Configure user accounts for family members
+
+services:
+  grampsweb_redis:
+    image: docker.io/valkey/valkey:8-alpine
+    container_name: grampsweb_redis
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379"
+
+  grampsweb:
+    image: ghcr.io/gramps-project/grampsweb:latest
+    container_name: grampsweb
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      GRAMPSWEB_TREE: "Gramps Web"
+      GRAMPSWEB_CELERY_CONFIG__broker_url: "redis://grampsweb_redis:6379/0"
+      GRAMPSWEB_CELERY_CONFIG__result_backend: "redis://grampsweb_redis:6379/0"
+      GRAMPSWEB_RATELIMIT_STORAGE_URI: "redis://grampsweb_redis:6379/1"
+      # Uncomment and set if behind a reverse proxy (e.g., NPM):
+      # GRAMPSWEB_BASE_URL: "https://genealogy.yourdomain.com"
+    depends_on:
+      - grampsweb_redis
+    volumes:
+      - ./users:/app/users
+      - ./indexdir:/app/indexdir
+      - ./thumbnail_cache:/app/thumbnail_cache
+      - ./cache:/app/cache
+      - ./persist:/app/persist
+      - ./secret:/app/secret
+      - ./grampsdb:/root/.gramps/grampsdb
+      - ./media:/app/media
+      - ./tmp:/tmp
+
+  grampsweb_celery:
+    image: ghcr.io/gramps-project/grampsweb:latest
+    container_name: grampsweb_celery
+    restart: always
+    depends_on:
+      - grampsweb
+      - grampsweb_redis
+    environment:
+      GRAMPSWEB_TREE: "Gramps Web"
+      GRAMPSWEB_CELERY_CONFIG__broker_url: "redis://grampsweb_redis:6379/0"
+      GRAMPSWEB_CELERY_CONFIG__result_backend: "redis://grampsweb_redis:6379/0"
+      GRAMPSWEB_RATELIMIT_STORAGE_URI: "redis://grampsweb_redis:6379/1"
+    volumes:
+      - ./users:/app/users
+      - ./indexdir:/app/indexdir
+      - ./thumbnail_cache:/app/thumbnail_cache
+      - ./cache:/app/cache
+      - ./persist:/app/persist
+      - ./secret:/app/secret
+      - ./grampsdb:/root/.gramps/grampsdb
+      - ./media:/app/media
+      - ./tmp:/tmp
+    command: celery -A gramps_webapi.celery worker --loglevel=INFO --concurrency=2
